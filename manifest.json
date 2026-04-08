@@ -1,0 +1,22 @@
+{
+  "name": "健康日记",
+  "short_name": "健康日记",
+  "description": "血糖血压每日记录与用药管理",
+  "start_url": "./app.html",
+  "display": "standalone",
+  "background_color": "#F5F7FA",
+  "theme_color": "#4F8EF7",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

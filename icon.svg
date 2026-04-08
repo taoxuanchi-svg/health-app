@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#4F8EF7"/>
+      <stop offset="100%" stop-color="#7B61FF"/>
+    </linearGradient>
+  </defs>
+  <!-- 心形 -->
+  <path d="M256 380 C256 380 120 290 120 200 C120 155 155 128 200 128 C225 128 245 142 256 158 C267 142 287 128 312 128 C357 128 392 155 392 200 C392 290 256 380 256 380Z" fill="white" opacity="0.95"/>
+  <!-- 心率线 -->
+  <polyline points="160,210 200,210 220,170 240,250 260,185 280,210 350,210"
+    fill="none" stroke="#FF6B6B" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
