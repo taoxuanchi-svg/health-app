@@ -462,6 +462,7 @@ html, body {
 .drug-pick-tag.sugar { background: var(--secondary-light); color: var(--secondary); }
 .drug-pick-tag.pressure { background: var(--primary-light); color: var(--primary); }
 .drug-pick-tag.lipid { background: var(--orange-light); color: var(--orange); }
+.drug-pick-tag.complication { background: var(--green-light); color: var(--green); }
 
 /* ===== Toast ===== */
 #toast {
@@ -636,6 +637,7 @@ html, body {
       <button class="pick-cat-btn" onclick="filterCat('sugar')">降血糖</button>
       <button class="pick-cat-btn" onclick="filterCat('pressure')">降血压</button>
       <button class="pick-cat-btn" onclick="filterCat('lipid')">调血脂</button>
+      <button class="pick-cat-btn" onclick="filterCat('complication')">并发症</button>
     </div>
     <div id="drugPickList" style="overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:8px;scrollbar-width:none"></div>
   </div>
@@ -1047,7 +1049,7 @@ function drawChart(type) {
 // ===== 用药页 =====
 const MED_ICONS = ['💊','💙','🔶','🟢'];
 const MED_COLORS = ['c0','c1','c2','c3'];
-const TYPE_LABELS = { sugar:'降血糖', pressure:'降血压', lipid:'调血脂', other:'其他' };
+const TYPE_LABELS = { sugar:'降血糖', pressure:'降血压', lipid:'调血脂', complication:'并发症', other:'其他' };
 const TIME_LABELS = { '08:00':'早餐后', '12:00':'午餐后', '19:00':'晚餐后', '22:00':'睡前' };
 const TYPE_COLORS = { sugar:'secondary', pressure:'primary', lipid:'orange' };
 
@@ -1177,6 +1179,68 @@ const DRUG_DB = {
     notice: '晨起服用以避免夜间频繁排尿；定期监测血钾、血糖、血尿酸；多吃含钾食物（香蕉、橙子）。',
     insurance: '医保甲类'
   },
+  // ---- 降血糖（新增） ----
+  ertugliflozin: {
+    name: '艾托格列净片', type: 'sugar', icon: '💊', iconColor: 'c0',
+    spec: '5mg/片',
+    indication: '2型糖尿病，可单独使用或与二甲双胍、胰岛素等联合使用，同时具有一定的心血管和肾脏保护作用。',
+    mechanism: 'SGLT-2抑制剂，通过抑制肾脏近端小管对葡萄糖的重吸收，促进尿糖排泄，从而降低血糖，同时伴有轻度利尿和降压效果。',
+    sideEffects: '泌尿生殖道感染（女性多见）、多尿、低血压（老年或利尿剂联用时）；罕见：糖尿病酮症酸中毒（即使血糖不高也需警惕）。',
+    contraindications: 'eGFR<30的严重肾功能不全、反复泌尿道感染、1型糖尿病、妊娠期禁用。',
+    notice: '服药期间保持充足饮水；注意外阴清洁卫生；手术前至少3天停药；出现恶心呕吐腹痛需检测酮体。',
+    insurance: '医保乙类'
+  },
+  dorzagliatin: {
+    name: '多格列艾汀片', type: 'sugar', icon: '💊', iconColor: 'c0',
+    spec: '75mg/片',
+    indication: '2型糖尿病，国产创新药，通过恢复葡萄糖感知功能改善血糖控制，适合病程各阶段的2型糖尿病患者。',
+    mechanism: '葡萄糖激酶（GK）激活剂，作用于胰腺β细胞和肝细胞的葡萄糖激酶，恢复葡萄糖感知功能，以血糖依赖方式促进胰岛素分泌并抑制肝糖输出，不易引发低血糖。',
+    sideEffects: '总体安全性良好；偶见低血糖（单独使用发生率低）、胃肠道不适、头晕。',
+    contraindications: '1型糖尿病、严重肝肾功能不全；与磺脲类联用需注意低血糖风险；妊娠及哺乳期不推荐。',
+    notice: '每日两次，餐前服用；国产创新药，2022年上市；可与二甲双胍联合使用增强降糖效果。',
+    insurance: '医保乙类'
+  },
+  repaglinide_metformin: {
+    name: '瑞格列奈二甲双胍片', type: 'sugar', icon: '💊', iconColor: 'c0',
+    spec: '瑞格列奈1mg+二甲双胍500mg/片',
+    indication: '已使用瑞格列奈和二甲双胍单药治疗血糖控制不佳的2型糖尿病患者，复方制剂简化用药。',
+    mechanism: '复方制剂：瑞格列奈为非磺脲类促胰岛素分泌剂，刺激餐后胰岛素快速释放；二甲双胍抑制肝糖输出并增加胰岛素敏感性，两者协同降糖。',
+    sideEffects: '低血糖（瑞格列奈成分）、胃肠道不适（二甲双胍成分）；体重可能略增加。',
+    contraindications: '严重肾功能不全（eGFR<30）、肝功能不全、1型糖尿病、妊娠期禁用；造影检查前48小时停药。',
+    notice: '餐前15分钟内服用；若跳餐则跳服对应剂量；定期监测肾功能和血糖。',
+    insurance: '医保乙类'
+  },
+  insulin_degludec: {
+    name: '德谷胰岛素注射液', type: 'sugar', icon: '💉', iconColor: 'c0',
+    spec: '100U/mL',
+    indication: '1型和2型糖尿病的基础胰岛素治疗，提供超长效（>42小时）平稳的基础胰岛素覆盖，每日注射一次。',
+    mechanism: '超长效胰岛素类似物，皮下注射后形成可溶性多聚体储库，缓慢持续释放，无明显峰值，低血糖风险低于甘精胰岛素。',
+    sideEffects: '低血糖（风险低于甘精胰岛素）、注射部位反应（脂肪增生、硬结）、体重增加。',
+    contraindications: '低血糖发作期间禁用；不可静脉注射；不可与其他胰岛素混合使用。',
+    notice: '每日固定时间皮下注射，如需要可在同一天任意时间调整（不受时间限制，灵活性高于其他基础胰岛素）；注射部位定期轮换；随身携带糖块。',
+    insurance: '医保乙类'
+  },
+  // ---- 降血压（新增） ----
+  valsartan: {
+    name: '缬沙坦胶囊', type: 'pressure', icon: '💙', iconColor: 'c1',
+    spec: '80mg/粒',
+    indication: '高血压、心力衰竭（不耐受ACEI者），尤其适合糖尿病合并高血压、蛋白尿患者，对肾脏有保护作用。',
+    mechanism: 'ARB类（血管紧张素II受体拮抗剂），选择性阻断AT1受体，抑制血管收缩和醛固酮分泌，从而降低血压，不引起干咳（区别于ACEI类）。',
+    sideEffects: '总体耐受性好；偶见头晕、高钾血症、血肌酐轻度升高；极罕见血管神经性水肿。',
+    contraindications: '妊娠期（致畸，整个孕期禁用）、双侧肾动脉狭窄、严重肝功能不全、高钾血症禁用；不可与ACEI类或阿利吉仑联用。',
+    notice: '可与或不与食物同服；定期监测血钾和肾功能；不要突然停药；避免与补钾药物大量同服。',
+    insurance: '医保甲类'
+  },
+  amlodipine_benazepril: {
+    name: '氨氯地平贝那普利片', type: 'pressure', icon: '💙', iconColor: 'c1',
+    spec: '氨氯地平5mg+贝那普利10mg/片',
+    indication: '高血压，尤其适合单药控制不佳、需要联合降压的患者；CCB+ACEI复方制剂，协同降压效果好，简化用药方案。',
+    mechanism: '复方制剂：氨氯地平（CCB类）扩张外周血管降低外周阻力；贝那普利（ACEI类）抑制ACE酶减少血管紧张素II，两者协同降压，贝那普利成分还能减轻氨氯地平引起的踝部水肿。',
+    sideEffects: '干咳（贝那普利成分，约10-15%，华人发生率更高）、踝部水肿（较单用氨氯地平少）、头痛、头晕；极罕见血管神经性水肿。',
+    contraindications: '妊娠期禁用（贝那普利致畸）、血管神经性水肿病史、双侧肾动脉狭窄、高钾血症禁用；不可与ARB类（如缬沙坦）联用。',
+    notice: '出现持续干咳可考虑换用CCB+ARB复方（如氨氯地平+缬沙坦）；避免大量饮用西柚汁；定期监测血压、血钾和肾功能。',
+    insurance: '医保乙类'
+  },
   // ---- 调血脂 ----
   atorvastatin: {
     name: '阿托伐他汀钙片', type: 'lipid', icon: '🟡', iconColor: 'c2',
@@ -1197,6 +1261,37 @@ const DRUG_DB = {
     contraindications: '严重肝功能不全、妊娠期及哺乳期、肌病史禁用；亚裔患者慎用高剂量。',
     notice: '每日一次，可与或不与食物同服；亚裔患者建议5mg起始；定期监测血脂和肝功能。',
     insurance: '医保乙类'
+  },
+  // ---- 并发症用药 ----
+  alpha_lipoic_acid: {
+    name: 'α-硫辛酸片', type: 'complication', icon: '🟢', iconColor: 'c2',
+    spec: '0.2g/片',
+    indication: '糖尿病周围神经病变（手脚麻木、疼痛、灼热感），通过抗氧化作用改善神经症状。',
+    mechanism: '强效抗氧化剂，能清除多种自由基，改善糖尿病患者因氧化应激导致的神经损伤；同时可轻度改善胰岛素敏感性。',
+    sideEffects: '总体安全性好；偶见恶心、胃部不适、皮肤过敏反应；极少数出现低血糖（联用降糖药时注意）。',
+    contraindications: '对硫辛酸过敏者禁用；妊娠及哺乳期慎用；儿童不推荐。',
+    notice: '餐前30分钟空腹服用效果更好；与维生素B1同服可增强疗效；长期服用建议定期评估神经症状改善情况。',
+    insurance: '医保乙类'
+  },
+  calcium_dobesilate: {
+    name: '羟苯磺酸钙胶囊', type: 'complication', icon: '🟢', iconColor: 'c2',
+    spec: '0.5g/粒',
+    indication: '糖尿病视网膜病变、糖尿病肾病早期（减少尿蛋白），改善微循环，延缓糖尿病眼底病变进展。',
+    mechanism: '通过降低毛细血管通透性、减少血浆蛋白渗出、抑制血小板聚集、降低血液黏度来改善微循环障碍，保护视网膜和肾脏微血管。',
+    sideEffects: '偶见胃肠道不适（恶心、腹泻）；少数患者出现皮肤过敏；罕见粒细胞减少（长期使用需监测血常规）。',
+    contraindications: '对本品过敏者禁用；严重肾功能不全慎用；妊娠早期慎用。',
+    notice: '随餐服用减少胃肠道刺激；需坚持长期服用方能发挥最大疗效；定期眼底检查监测视网膜病变进展；长期服用建议每3-6个月检查血常规。',
+    insurance: '医保乙类'
+  },
+  mecobalamin: {
+    name: '甲钴胺片', type: 'complication', icon: '🟢', iconColor: 'c2',
+    spec: '0.5mg/片',
+    indication: '糖尿病周围神经病变，改善手脚麻木、疼痛、感觉减退等症状；也用于巨幼细胞性贫血。',
+    mechanism: '活性维生素B12（甲基钴胺素），直接参与神经髓鞘的合成，促进受损神经纤维的修复与再生，改善神经传导速度。',
+    sideEffects: '安全性极好，不良反应罕见；偶见食欲不振、恶心；长期大量使用偶见皮疹。',
+    contraindications: '对钴胺素过敏者禁用；避光保存（见光易分解失效）。',
+    notice: '避免在强光下存放（甲钴胺见光分解，需避光存储）；通常需连续服用1-3个月以上才能观察到明显效果；可与硫辛酸联合使用协同改善神经病变。',
+    insurance: '医保甲类'
   }
 };
 
@@ -1318,7 +1413,7 @@ function renderDrugPickList() {
     const el = document.createElement('div');
     el.className = 'drug-pick-item';
     el.innerHTML = `
-      <div class="drug-pick-icon ${d.iconColor}" style="background:var(--${d.type==='sugar'?'secondary':'primary'}-light)">${d.icon}</div>
+      <div class="drug-pick-icon ${d.iconColor}" style="background:var(--${d.type==='sugar'?'secondary-light':d.type==='complication'?'green-light':'primary-light'})">${d.icon}</div>
       <div style="flex:1;min-width:0">
         <div class="drug-pick-name">${d.name}</div>
         <div class="drug-pick-sub">${d.spec} · ${d.indication.slice(0,22)}…</div>
@@ -1345,10 +1440,10 @@ function openMedConfig(dbKey, editMedId) {
 
   // 预览选中药品
   $('selectedDrugPreview').innerHTML = `
-    <div style="width:36px;height:36px;border-radius:10px;background:var(--${drug.type==='sugar'?'secondary':'primary'}-light);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">${drug.icon}</div>
+    <div style="width:36px;height:36px;border-radius:10px;background:var(--${drug.type==='sugar'?'secondary-light':drug.type==='complication'?'green-light':'primary-light'});display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">${drug.icon}</div>
     <div>
       <div style="font-size:14px;font-weight:700">${drug.name}</div>
-      <div style="font-size:11px;color:var(--gray-600)">${drug.spec} · <span style="color:var(--${drug.type==='sugar'?'secondary':'primary'})">${TYPE_LABELS[drug.type]}</span></div>
+      <div style="font-size:11px;color:var(--gray-600)">${drug.spec} · <span style="color:var(--${drug.type==='sugar'?'secondary':drug.type==='complication'?'green':'primary'})">${TYPE_LABELS[drug.type]}</span></div>
     </div>`;
 
   $('inputMedDesc').value = med ? med.desc : drug.spec;
@@ -1423,6 +1518,7 @@ function openDetailPage(medId) {
   const typeLabel = TYPE_LABELS[med.type] || '其他';
   const heroGrad = med.type === 'sugar' ? 'linear-gradient(160deg,#FF6B6B,#FF8E53)'
                  : med.type === 'pressure' ? 'linear-gradient(160deg,#4F8EF7,#7B61FF)'
+                 : med.type === 'complication' ? 'linear-gradient(160deg,#34C759,#30B0C7)'
                  : 'linear-gradient(160deg,#FF9500,#FF6B6B)';
 
   const infoSection = (title, content) => content ? `
